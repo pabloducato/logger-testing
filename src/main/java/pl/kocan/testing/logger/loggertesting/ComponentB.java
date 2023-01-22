@@ -7,11 +7,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class ComponentB {
 
-    private void actionC() {
+    protected void actionC() {
         log.info("Aasdsadsadsa");
     }
 
-    private void actionD() {
+    protected void actionD() {
         log.info("Aasdsadsadsa");
+    }
+
+    protected void actionWarn() {
+        log.warn("Warning");
+    }
+
+    protected void actionError() {
+        log.error("Error");
     }
 }
