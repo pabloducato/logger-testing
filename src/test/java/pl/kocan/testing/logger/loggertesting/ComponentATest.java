@@ -2,43 +2,50 @@ package pl.kocan.testing.logger.loggertesting;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 
-import static org.mockito.Mockito.verify;
+import java.util.Arrays;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(OutputCaptureExtension.class)
 class ComponentATest {
 
-    @InjectMocks
-    private ComponentA componentA;
-
-    @Mock
-    Logger logger;
+    private final ComponentA componentA = new ComponentA();
 
     @Test
-    void testMethodA() {
+    void testMethodA(CapturedOutput output) {
 
         // given // when
         componentA.actionA();
         componentA.actionB();
 
         // then
-        verify(logger, Mockito.times(1)).info("Aasdsadsadsa1");
+        List<String> list = getLogs(output);
+        assertThatLogs(list, list.size(), "Aasdsadsadsa1", "Aasdsadsadsa2");
     }
 
     @Test
-    void testMethodA_full() {
+    void testMethodA_full(CapturedOutput output) {
 
         // given
         componentA.actionA();
         componentA.actionB();
 
         // when // then
-        verify(logger, Mockito.times(1)).info("Aasdsadsadsa1");
-        verify(logger, Mockito.times(1)).info("Aasdsadsadsa2");
+        List<String> list = getLogs(output);
+        assertThatLogs(list, list.size(), "Aasdsadsadsa1", "Aasdsadsadsa2");
+    }
+
+    private List<String> getLogs(CapturedOutput output) {
+        return Arrays.stream(output.getOut().split("\r\n")).toList();
+    }
+
+    private void assertThatLogs(List<String> list, int size, String... values) {
+        assertThat(list)
+                .hasSize(size)
+                .containsExactly(values);
     }
 }

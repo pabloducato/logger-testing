@@ -1,9 +1,9 @@
 package pl.kocan.testing.logger.loggertesting;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
-@Slf4j
+@Log4j2
 @Component
 public class ComponentA {
 

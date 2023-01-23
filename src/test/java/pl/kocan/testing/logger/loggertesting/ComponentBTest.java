@@ -2,25 +2,21 @@ package pl.kocan.testing.logger.loggertesting;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 
-import static org.mockito.Mockito.verify;
+import java.util.Arrays;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(OutputCaptureExtension.class)
 class ComponentBTest {
 
-    @InjectMocks
-    private ComponentB componentB;
-
-    @Mock
-    Logger logger;
+    private final ComponentB componentB = new ComponentB();
 
     @Test
-    void testComponentB_full() {
+    void testComponentB_full(CapturedOutput output) {
 
         // given // when
         componentB.actionC();
@@ -29,8 +25,9 @@ class ComponentBTest {
         componentB.actionError();
 
         // then
-        verify(logger, Mockito.times(2)).info("Aasdsadsadsa");
-        verify(logger).warn("Warning");
-        verify(logger).error("Error");
+        List<String> list = Arrays.stream(output.getOut().split("\r\n")).toList();
+        assertThat(list)
+                .hasSize(list.size())
+                .containsExactly("Aasdsadsadsa", "Aasdsadsadsa", "Warning", "Error");
     }
 }
