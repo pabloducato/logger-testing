@@ -5,10 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static pl.kocan.testing.logger.loggertesting.ComponentUtil.assertThatLogs;
+import static pl.kocan.testing.logger.loggertesting.ComponentUtil.getLogs;
 
 @ExtendWith(OutputCaptureExtension.class)
 class ComponentBTest {
@@ -25,9 +25,7 @@ class ComponentBTest {
         componentB.actionError();
 
         // then
-        List<String> list = Arrays.stream(output.getOut().split("\r\n")).toList();
-        assertThat(list)
-                .hasSize(list.size())
-                .containsExactly("Aasdsadsadsa", "Aasdsadsadsa", "Warning", "Error");
+        List<String> list = getLogs(output);
+        assertThatLogs(list, list.size(), "Aasdsadsadsa", "Aasdsadsadsa", "Warning", "Error");
     }
 }
